@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">BusTec</string>
+    <string name="title_activity_menu">Menu</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="menu_home">Principal</string>
+    <string name="menu_rutas">Rutas</string>
+    <string name="menu_horarios">Horarios</string>
+    <string name="menu_perfil">Perfil</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_end">Cerrar session</string>
+    <string name="title_activity_principal">Principal</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- TODO: Datos para  spinner-->
+    <string name="ruta1">Tecsup-Puente S.Anita</string>
+    <string name="ruta2">Tecsup-Agustino</string>
+    <string name="ruta3">Tecsup-Lima Centro</string>
+    <string name="ruta4">Tecsup-San Borja</string>
+    <string name="ruta5">Tecsup-Los Olivos</string>
+    <string name="ruta6">Tecsup-Chaclacayo</string>
+    <string name="ruta7">Tecsup-Surco</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="google_maps_API_key">AIzaSyDTBZAzVHBYO3e5uLBqb-kqozzf9jILpJo</string>
+</resources>
