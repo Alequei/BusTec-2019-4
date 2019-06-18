@@ -49,6 +49,8 @@ public class Ruta1 extends Fragment implements OnMapReadyCallback, TaskLoadedCal
         id = getArguments().getInt("id");
         latitudOrigen = getArguments().getDouble("latitud-origen");
         longitudorigen = getArguments().getDouble("longitud-origen");
+        latituddestino= getArguments().getDouble("latitud-destino");
+        longituddestino= getArguments().getDouble("longitud-destino");
         titleorigen=getArguments().getString("title-origen");
         titledestino=getArguments().getString("title-destino");
 
