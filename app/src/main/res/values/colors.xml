@@ -13,4 +13,5 @@
     <color name="colorRed">#FF5252</color>
     <color name="colorGreem">#B2FF59</color>
     <color name="colorSilver">#D8D5D5</color>
+    <color name="colorDark">#000000</color>
 </resources>

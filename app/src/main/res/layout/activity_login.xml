@@ -206,7 +206,6 @@
                 android:drawableLeft="@drawable/ic_email_black_24dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-
                 android:text="LOGIN CON GMAIL"
                 android:textColor="@color/colorPurple" />
         </RelativeLayout>

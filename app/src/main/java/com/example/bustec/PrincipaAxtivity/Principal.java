@@ -2,9 +2,11 @@ package com.example.bustec.PrincipaAxtivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,19 +19,34 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.bustec.Fragmets.Ruta1;
 import com.example.bustec.Logeo.Login;
 import com.example.bustec.R;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Principal extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
 
     FirebaseUser currentuser;
     FirebaseAuth  auth;
+    private ImageView photo;
+    private TextView nombrecorreo;
+    private TextView nombre;
+    private GoogleApiClient googleApiClient;
+    /**/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +54,14 @@ public class Principal extends AppCompatActivity
         setContentView(R.layout.activity_principal);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //Variables de Gmail
+        photo=(ImageView)findViewById(R.id.nav_user_photo);
+        nombrecorreo=(TextView)findViewById(R.id.nav_useremail);
+        nombre=(TextView)findViewById(R.id.nav_username);
+        GoogleSignInOptions gso=new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        googleApiClient=new GoogleApiClient.Builder(this).
+                enableAutoManage(this,this).
+                addApi(Auth.GOOGLE_SIGN_IN_API,gso).build();
         //Varialbes de Firebase
         auth=FirebaseAuth.getInstance();
         currentuser=auth.getCurrentUser();
@@ -58,6 +83,7 @@ public class Principal extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         updateNavHeader();
+
     }
 
     @Override
@@ -201,7 +227,19 @@ public class Principal extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.mainlayout,new PerfilFragment()).commit();
         }else if (id == R.id.nav_end) {
             FirebaseAuth.getInstance().signOut();
+            Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+                @Override
+                public void onResult(@NonNull Status status) {
+                    if (status.isSuccess()){
+                       /* goLogInScreen();*/
+                    }else {
+                        Toast.makeText(getApplicationContext(),"No se pudo cerrar sesion",Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+            });
             Intent loginactivity=new Intent(this, Login.class);
+
             startActivity(loginactivity);
             finish();
         }
@@ -223,4 +261,42 @@ public class Principal extends AppCompatActivity
         Glide.with(this).load(currentuser.getPhotoUrl()).into(navUserPhoto);
 
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        OptionalPendingResult<GoogleSignInResult> sign=Auth.GoogleSignInApi.silentSignIn(googleApiClient);
+        if (sign.isDone()){
+        GoogleSignInResult result=sign.get();
+        handleSignInResult(result);
+        }else {
+            sign.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                @Override
+                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
+                    handleSignInResult(googleSignInResult);
+                }
+            });
+        }
+    }
+    private void handleSignInResult(GoogleSignInResult result) {
+    if (result.isSuccess()){
+        GoogleSignInAccount account=result.getSignInAccount();
+        nombre.setText(account.getDisplayName());
+         nombrecorreo.setText(account.getEmail());
+        Glide.with(this).load(account.getPhotoUrl()).into(photo);
+    }else {
+       /* goLogInScreen();*/
+    }
+    }
+/*    private  void goLogInScreen(){
+        Intent  intent=new Intent(this,Login.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }*/
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
 }
